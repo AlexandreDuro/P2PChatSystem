@@ -18,7 +18,7 @@ public class TCPServer {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
                 BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-                new Main(bufferedReader, bufferedWriter);
+                //new Main(bufferedReader, bufferedWriter);
             }
         } catch (IOException e) {
             e.printStackTrace();
