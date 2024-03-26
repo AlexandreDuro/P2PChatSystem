@@ -1,63 +1,69 @@
 package ChatSystem;
 
-import GUI_interface.GUI_interface;
+import Network.Communication;
 import ViewModel.ChatView;
 import ViewModel.ChatModel;
 import TCP.TCPClient;
 import TCP.TCPServer;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 public class ChatController {
     private ChatModel model;
     private ChatView view;
-    private TCPClient tcpClient;
-    private TCPServer tcpServer;
+    private Communication communication;
+    private HashMap<String, String> users;
 
-    public ChatController(ChatModel model, ChatView view, TCPClient tcpClient, TCPServer tcpServer) {
+    public ChatController(ChatModel model, ChatView view) {
         this.model = model;
         this.view = view;
-        this.tcpClient = tcpClient;
-        this.tcpServer = tcpServer;
+        this.users = new HashMap<>();
+        this.communication = new Communication(this);
     }
 
-//    public void sendMessage(String message) {
-//        model.addMessage("You: " + message);
-//        view.displayMessage("You: " + message);
-//        tcpClient.send(message);
-//    }
-//
-//    public void receiveMessage(String message) {
-//        model.addMessage("Other: " + message);
-//        view.displayMessage("Other: " + message);
-//    }
-//
-//    public void sendFile(String filePath) {
-//        model.addFile(filePath);
-//        view.displayFile(filePath);
-//        tcpClient.sendFile(filePath);
-//    }
-//
-//    public void receiveFile(String filePath) {
-//        model.addFile(filePath);
-//        view.displayFile(filePath);
-//    }
-//
-//    public void displayMessages() {
-//        view.displayAllMessages();
-//    }
-//
-//    public void stopServer() {
-//        tcpServer.stopListening();
-//    }
-//
-//    public void connectToPeer(String address, int port) {
-//        tcpServer = new TCPServer(port, this);
-//        tcpServer.startListening();
-//        tcpClient = new TCPClient(address, port, this);
-//        tcpClient.connect();
-//    }
-//
-//    public void disconnectFromPeers() {
-//        tcpClient.disconnect();
-//        tcpServer.stopListening();
-//    }
+    public void sendMessage(String username, String message) {
+        model.addMessage("You to " + username + ": " + message);
+        view.displayMessage("You to " + username + ": " + message);
+        communication.send(username, message);
+    }
+
+    public void receiveMessage(String message) {
+        model.addMessage("Other: " + message);
+        view.displayMessage("Other: " + message);
+        view.updateUsers(new ArrayList<>(users.keySet()));
+    }
+
+    public void sendFile(String username, String filePath) {
+        model.addFile(filePath);
+        view.displayFile(filePath);
+        communication.sendFile(username, filePath);
+    }
+
+    public void receiveFile(String filePath) {
+        model.addFile(filePath);
+        view.displayFile(filePath);
+    }
+
+    public void displayMessages() {
+        view.displayAllMessages();
+    }
+
+    public void stopServer() {
+        communication.disconnect();
+    }
+
+    public void connectToPeer(String address, int port) {
+        communication.connect(address, port);
+    }
+
+    public void disconnectFromPeers() {
+        communication.disconnect();
+    }
+
+    public void userConnected(String username, String address, int port) {
+        users.put(username, address);
+        communication.connect(address, port);
+        view.userConnected(username);
+    }
 }

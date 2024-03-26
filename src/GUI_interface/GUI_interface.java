@@ -1,13 +1,14 @@
 package GUI_interface;
 
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import ChatSystem.ChatController;
 
-public class GUI_interface extends JFrame implements Runnable{
-    private BufferedWriter writer;
-    private BufferedReader reader;
-    private JComboBox comboBoxList;
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+
+public class GUI_interface extends JFrame{
+    private JComboBox<String> comboBoxList;
     private JLabel labelComboBoxList;
     private JLabel labelTitleTargetUser;
     private JLabel labelTargetUser;
@@ -17,59 +18,34 @@ public class GUI_interface extends JFrame implements Runnable{
     private JTextArea textAreaS;
     private JButton buttonS;
     private JPanel jpanelInterface;
+    private ChatController controller;
 
-    public GUI_interface(BufferedReader reader, BufferedWriter writer) {
-        this.reader = reader;
-        this.writer = writer;
+    public GUI_interface(ChatController controller) {
+        this.controller = controller;
         initComponents();
-
-        Thread readerThread = new Thread(this);
-        readerThread.start();
     }
 
     public void initComponents() {
         JFrame frame = new JFrame("Interface");
         frame.setContentPane(jpanelInterface);
-        frame.setSize(500, 400);
+        frame.setSize(400, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        // List
-        String[] list = {"Alexandre", "Matthieu", "Option 3"};
-
-        comboBoxList.setModel(new DefaultComboBoxModel(list));
-        comboBoxList.setSelectedIndex(0);
-        comboBoxList.addActionListener(e -> {
-            JComboBox cb = (JComboBox)e.getSource();
-            String selectedOption = (String)cb.getSelectedItem();
-            System.out.println(selectedOption);
-            //Set labelTargetUser
-            labelTargetUser.setText(selectedOption + " [192.168.1.2]");
-        });
-
-        // Button S
-        buttonS.addActionListener(e -> {
-            try {
-                writer.write(textAreaS.getText());
-                writer.newLine();
-                writer.flush();
-                textAreaS.setText("");
-            } catch (Exception ex) {
-                ex.printStackTrace();
+        buttonS.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String selectedUser = (String) comboBoxList.getSelectedItem();
+                String message = textAreaS.getText();
+                controller.sendMessage(selectedUser, message);
             }
         });
     }
 
-    public void run() {
-        while (true) {
-            try {
-                String line = reader.readLine();
-                if (line != null) {
-                    textAreaR.setText(line);
-                }
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
+    public void updateUsers(List<String> users) {
+        comboBoxList.removeAllItems();
+        for (String user : users) {
+            comboBoxList.addItem(user);
         }
     }
 }

@@ -37,4 +37,8 @@ public class ChatModel {
     public List<String> getUsers() {
         return users;
     }
+
+    public String getPeerAddress(String peerUsername) {
+        return "localhost";
+    }
 }

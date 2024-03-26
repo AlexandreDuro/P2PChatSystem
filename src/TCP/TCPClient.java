@@ -1,33 +1,64 @@
 package TCP;
 
 import ChatSystem.ChatController;
-import GUI_connection.GUI_connection;
-import GUI_interface.GUI_interface;
-
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
 
 public class TCPClient {
+    private Socket socket;
+    private BufferedWriter bufferedWriter;
+    private ChatController controller;
     private String serverAddress;
     private int serverPort;
 
-    public TCPClient(String serverAddress, int serverPort) {
+    public TCPClient(String serverAddress, int serverPort, ChatController controller) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
+        this.controller = controller;
+    }
 
+    public void connect() {
         try {
-            InetAddress serverAddress2 = InetAddress.getByName(serverAddress);
-            Socket socket = new Socket(serverAddress2, serverPort);
+            socket = new Socket(serverAddress, serverPort);
             System.out.println("Connected to server at " + serverAddress);
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+    public void send(String address, String message) {
+        try (Socket socket = new Socket(address, serverPort);
+             BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()))) {
+            System.out.println("Connected to server at " + address);
+            bufferedWriter.write(message);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            GUI_interface gui_interface = new GUI_interface(bufferedReader, bufferedWriter);
+    public void sendFile(String address, String filePath) {
+        try (Socket socket = new Socket(address, serverPort);
+             OutputStream outputStream = socket.getOutputStream();
+             FileInputStream fileInputStream = new FileInputStream(filePath)) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                outputStream.write(buffer, 0, bytesRead);
+            }
+            outputStream.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            String response = bufferedReader.readLine();
-            System.out.println("Server responded: " + response);
+    public void disconnect() {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

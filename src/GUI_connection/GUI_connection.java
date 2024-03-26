@@ -1,14 +1,20 @@
 package GUI_connection;
 
+import ChatSystem.ChatController;
+
 import javax.swing.*;
+import java.net.UnknownHostException;
+import java.net.InetAddress;
 
 public class GUI_connection {
     private JPanel jpanelConnection;
     private JLabel labelTitleConnection;
     private JTextField textFieldUsername;
     private JButton buttonConnection;
+    private ChatController controller;
 
-    public GUI_connection() {
+    public GUI_connection(ChatController controller) {
+        this.controller = controller;
         initComponents();
     }
 
@@ -25,8 +31,19 @@ public class GUI_connection {
                 return;
             }
 
-//            GUI_interface.GUI_interface gui_interface = new GUI_interface.GUI_interface();
-//            frame.dispose();
+            String username = textFieldUsername.getText();
+            String address;
+            try {
+                address = InetAddress.getLocalHost().getHostAddress();
+            } catch (UnknownHostException unknownHostException) {
+                JOptionPane.showMessageDialog(null, "Could not get local IP address");
+                return;
+            }
+
+            int port = 12345;
+            controller.userConnected(username, address, port);
+            GUI_interface.GUI_interface gui_interface = new GUI_interface.GUI_interface(controller);
+            frame.dispose();
         });
     }
 }
