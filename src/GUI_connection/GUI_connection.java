@@ -25,8 +25,8 @@ public class GUI_connection {
                 return;
             }
 
-            GUI_interface.GUI_interface gui_interface = new GUI_interface.GUI_interface();
-            frame.dispose();
+//            GUI_interface.GUI_interface gui_interface = new GUI_interface.GUI_interface();
+//            frame.dispose();
         });
     }
 }

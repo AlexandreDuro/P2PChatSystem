@@ -1,51 +1,33 @@
 package TCP;
 
 import ChatSystem.ChatController;
+import GUI_connection.GUI_connection;
+import GUI_interface.GUI_interface;
+
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class TCPClient {
-    private Socket socket;
-    private BufferedWriter bufferedWriter;
-    private ChatController controller;
     private String serverAddress;
     private int serverPort;
 
-    public TCPClient(String serverAddress, int serverPort, ChatController controller) {
+    public TCPClient(String serverAddress, int serverPort) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
-        this.controller = controller;
-    }
 
-    public void connect() {
         try {
-            socket = new Socket(serverAddress, serverPort);
+            InetAddress serverAddress2 = InetAddress.getByName(serverAddress);
+            Socket socket = new Socket(serverAddress2, serverPort);
             System.out.println("Connected to server at " + serverAddress);
-            bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
-    public void send(String message) {
-        try {
-            bufferedWriter.write(message);
-            bufferedWriter.newLine();
-            bufferedWriter.flush();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-    public void sendFile(String filePath) {
-        // Logic to send file content over the TCP connection
-    }
+            GUI_interface gui_interface = new GUI_interface(bufferedReader, bufferedWriter);
 
-    public void disconnect() {
-        try {
-            if (socket != null) {
-                socket.close();
-            }
+            String response = bufferedReader.readLine();
+            System.out.println("Server responded: " + response);
         } catch (IOException e) {
             e.printStackTrace();
         }
