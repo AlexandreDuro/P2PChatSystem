@@ -31,6 +31,8 @@ public class TCPServer {
                     writer.write("Welcome, you are connected to the server.");
                     writer.newLine();
                     writer.flush();
+
+                    new Thread(new ClientHandler(clientSocket, controller)).start();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -15,11 +15,11 @@ public class Communication {
     public Communication(ChatController controller) {
         this.controller = controller;
         this.users = new HashMap<>();
+        this.tcpServer = new TCPServer(12345, controller);
+        this.tcpServer.startListening();
     }
 
     public void connect(String serverAddress, int serverPort) {
-        tcpServer = new TCPServer(serverPort, controller);
-        tcpServer.startListening();
         tcpClient = new TCPClient(serverAddress, serverPort, controller);
         tcpClient.connect();
     }

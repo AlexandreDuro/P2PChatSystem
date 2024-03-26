@@ -52,6 +52,17 @@ public class ChatController {
         view.displayAllMessages();
     }
 
+    public void handleMessage(String message) {
+        String[] parts = message.split(":", 2);
+        if (parts.length >= 2) {
+            String username = parts[0];
+            String msg = parts[1];
+
+            model.addMessage(username + ": " + msg);
+            view.displayMessage(username + ": " + msg);
+        }
+    }
+
     public void stopServer() {
         communication.disconnect();
     }
