@@ -30,7 +30,7 @@ public class Communication {
     }
 
     public void send(String username, String message) {
-        controller.sendMessage(username, message);
+        tcpClient.send(users.get(username), message);
     }
 
     public void sendFile(String username, String filePath) {
