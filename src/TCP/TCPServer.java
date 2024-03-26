@@ -1,28 +1,43 @@
 package TCP;
 
-import java.io.*;
-import java.net.Socket;
+import ChatSystem.ChatController;
+import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class TCPServer {
+    private ServerSocket serverSocket;
+    private ChatController controller;
+    private int serverPort;
 
-    public static void main(String[] args){
-        final int PORT =12345;
-        try (ServerSocket serverSocket = new ServerSocket(PORT)){
-            System.out.println("Server waiting on port " + PORT);
+    public TCPServer(int serverPort, ChatController controller) {
+        this.serverPort = serverPort;
+        this.controller = controller;
+    }
 
-            while(true) {
-                Socket socket = serverSocket.accept();
-                System.out.println("Client connected :" + socket.getInetAddress().getHostAddress());
+    public void startListening() {
+        new Thread(() -> {
+            try {
+                serverSocket = new ServerSocket(serverPort);
+                System.out.println("Server is listening on port " + serverPort);
 
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+                while (true) {
+                    Socket clientSocket = serverSocket.accept();
+                    System.out.println("Client connected from " + clientSocket.getInetAddress().getHostAddress());
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }).start();
+    }
 
-                //new Main(bufferedReader, bufferedWriter);
+    public void stopListening() {
+        try {
+            if (serverSocket != null && !serverSocket.isClosed()) {
+                serverSocket.close();
             }
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("Server error: " + e.getMessage());
         }
     }
 }
