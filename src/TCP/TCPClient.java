@@ -1,26 +1,53 @@
 package TCP;
 
+import ChatSystem.ChatController;
 import java.io.*;
-import java.net.InetAddress;
 import java.net.Socket;
 
 public class TCPClient {
-    public static void main(String[] args) {
-        final String SERVER_ADDRESS = "localhost";
-        final int SERVER_PORT = 12345;
+    private Socket socket;
+    private BufferedWriter bufferedWriter;
+    private ChatController controller;
+    private String serverAddress;
+    private int serverPort;
 
+    public TCPClient(String serverAddress, int serverPort, ChatController controller) {
+        this.serverAddress = serverAddress;
+        this.serverPort = serverPort;
+        this.controller = controller;
+    }
+
+    public void connect() {
         try {
-            InetAddress serverAddress = InetAddress.getByName(SERVER_ADDRESS);
-            Socket socket = new Socket(serverAddress, SERVER_PORT);
-            System.out.println("Connected to server at " + serverAddress.getHostAddress());
+            socket = new Socket(serverAddress, serverPort);
+            System.out.println("Connected to server at " + serverAddress);
+            bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            BufferedWriter bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+    public void send(String message) {
+        try {
+            bufferedWriter.write(message);
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-//            new Communication(bufferedReader, bufferedWriter);
+    public void sendFile(String filePath) {
+        // Logic to send file content over the TCP connection
+    }
+
+    public void disconnect() {
+        try {
+            if (socket != null) {
+                socket.close();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
-
