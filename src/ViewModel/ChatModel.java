@@ -38,6 +38,10 @@ public class ChatModel {
         return users;
     }
 
+    public void setUsers(List<String> users) {
+        this.users = users;
+    }
+
     public String getPeerAddress(String peerUsername) {
         return "localhost";
     }

@@ -26,14 +26,10 @@ public class ChatView {
     }
 
     public void userConnected(String username) {
-        System.out.println("User connected: " + username);
+        model.addUser(username);
     }
 
-    public void displayUsers(List<String> usernames) {
-        System.out.println("Connected users: " + String.join(", ", usernames));
-    }
-
-    public void updateUsers(List<String> usernames) {
-        System.out.println("Updated user list: " + String.join(", ", usernames));
+    public void updateUsers(List<String> users) {
+        model.setUsers(users);
     }
 }
