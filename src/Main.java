@@ -1,11 +1,7 @@
 import ChatSystem.ChatController;
 import GUI_connection.GUI_connection;
-import GUI_interface.GUI_interface;
 import ViewModel.ChatModel;
 import ViewModel.ChatView;
-
-import java.net.Socket;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {

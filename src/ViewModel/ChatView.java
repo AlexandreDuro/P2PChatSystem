@@ -27,6 +27,7 @@ public class ChatView {
 
     public void userConnected(String username) {
         model.addUser(username);
+        System.out.println("User connected: " + username);
     }
 
     public void updateUsers(List<String> users) {
