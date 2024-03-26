@@ -6,6 +6,8 @@ import ViewModel.ChatModel;
 import TCP.TCPClient;
 import TCP.TCPServer;
 
+import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -14,6 +16,7 @@ public class ChatController {
     private ChatView view;
     private Communication communication;
     private HashMap<String, String> users;
+    private Socket socket;
 
     public ChatController(ChatModel model, ChatView view) {
         this.model = model;

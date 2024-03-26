@@ -46,4 +46,5 @@ public class GUI_connection {
             frame.dispose();
         });
     }
+
 }

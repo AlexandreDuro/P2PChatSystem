@@ -2,8 +2,10 @@ package TCP;
 
 import ChatSystem.ChatController;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.io.BufferedWriter;
 
 public class TCPServer {
     private ServerSocket serverSocket;
@@ -24,6 +26,11 @@ public class TCPServer {
                 while (true) {
                     Socket clientSocket = serverSocket.accept();
                     System.out.println("Client connected from " + clientSocket.getInetAddress().getHostAddress());
+
+                    BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                    writer.write("Welcome, you are connected to the server.");
+                    writer.newLine();
+                    writer.flush();
                 }
             } catch (IOException e) {
                 e.printStackTrace();

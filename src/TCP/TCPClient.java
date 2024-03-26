@@ -22,6 +22,10 @@ public class TCPClient {
             socket = new Socket(serverAddress, serverPort);
             System.out.println("Connected to server at " + serverAddress);
             bufferedWriter = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+
+            bufferedWriter.write("Hello, I am connected to you.");
+            bufferedWriter.newLine();
+            bufferedWriter.flush();
         } catch (IOException e) {
             e.printStackTrace();
         }
