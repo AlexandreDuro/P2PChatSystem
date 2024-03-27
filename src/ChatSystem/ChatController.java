@@ -1,11 +1,13 @@
 package ChatSystem;
 
+import GUI_interface.GUI_interface;
 import Network.Communication;
 import ViewModel.ChatView;
 import ViewModel.ChatModel;
 import TCP.TCPClient;
 import TCP.TCPServer;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -60,6 +62,9 @@ public class ChatController {
 
             model.addMessage(username + ": " + msg);
             view.displayMessage(username + ": " + msg);
+
+            GUI_interface gui = new GUI_interface(this);
+            gui.textAreaR.setText(msg);
         }
     }
 

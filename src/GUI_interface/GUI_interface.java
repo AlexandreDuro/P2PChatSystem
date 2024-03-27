@@ -17,7 +17,7 @@ public class GUI_interface extends JFrame{
     private JLabel labelTargetUser;
     private JLabel labelR;
     private JLabel labelS;
-    private JTextArea textAreaR;
+    public JTextArea textAreaR;
     private JTextArea textAreaS;
     private JButton buttonS;
     private JPanel jpanelInterface;

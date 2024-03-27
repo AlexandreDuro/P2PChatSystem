@@ -1,6 +1,7 @@
 package TCP;
 
 import ChatSystem.ChatController;
+import GUI_interface.GUI_interface;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -24,7 +25,9 @@ public class ClientHandler implements Runnable {
             String message;
             while ((message = reader.readLine()) != null) {
                 System.out.println("Received message: " + message);
-                controller.handleMessage(message);
+                //controller.handleMessage(message);
+                GUI_interface gui = new GUI_interface(controller);
+                gui.textAreaR.setText(message);
             }
         } catch (IOException e) {
             e.printStackTrace();
