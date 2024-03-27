@@ -5,6 +5,9 @@ import ChatSystem.ChatController;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.HashMap;
 import java.util.List;
 
 public class GUI_interface extends JFrame{
@@ -35,9 +38,14 @@ public class GUI_interface extends JFrame{
         buttonS.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String selectedUser = (String) comboBoxList.getSelectedItem();
-                String message = textAreaS.getText();
-                controller.sendMessage(selectedUser, message);
+                HashMap<String, String> users = new HashMap<>();
+                try {
+                    String ip_address = InetAddress.getLocalHost().getHostAddress();
+                    users.put("username", ip_address);
+                    controller.sendMessage(users.get("username"), textAreaS.getText());
+                } catch (UnknownHostException ex) {
+                    throw new RuntimeException(ex);
+                }
             }
         });
     }
